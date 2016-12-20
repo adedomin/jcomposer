@@ -1,22 +1,15 @@
-var browserify = require('browserify'),
-    util = require('util'),
+var util = require('util'),
     _ = require('lodash')
 
 var genModule = (name, module, obj) => `
     // --- BEGIN ${name} ---
-    if (require('${module}').async) {
-        require('${module}')(${util.inspect(obj, { depth: null })}, (err, obj) => {
-            if (err) {
-                obj.error = err
-            }
-            
-            responses['${name}'] = obj
-        })
-    }
-    else {
-        responses['${name}'] = 
-            require('${module}')(${util.inspect(obj, { depth: null })})
-    }
+    require('${module}')(${util.inspect(obj, { depth: null })}, (err, obj) => {
+        if (err) {
+            obj.error = err
+        }
+
+        responses['${name}'] = obj
+    })
 
     if (responses['${name}'].error) {
         console.log(responses)
@@ -55,52 +48,13 @@ var handleModule = (module) => {
 }
 
 var compose = (tree) => `
-    var waterfall = require('async/waterfall')
+    var waterfall = require('async.waterfall')
     var responses = {}
     ${tree.tasks.map(task => `${handleModule(task)}`).join('')}
     console.log(JSON.stringify(responses))
 `
 
-var generateBlob = (tree) => {
+module.exports = (tree) => {
     var source = compose(tree)
     console.log(source)
-//    browserify(source, {
-//        commondir: false,
-//        builtins: [],
-//        detectGlobals: false
-//    }).bundle().pipe(process.stdout)
 }
-
-module.exports = generateBlob
-
-//var tree = {
-//    tasks: [
-//        { 
-//            name: 'test',
-//            echo: {
-//                x: 'x',
-//                y: 'y',
-//                z: 'z',
-//                arr: ['1','2','3']
-//            }
-//        },
-//        {
-//            name: 'test2',
-//            serial: [
-//                {
-//                    name: 'test3',
-//                    echo: 'echo2'
-//                },
-//                {
-//                    name: 'test4',
-//                    echo: 'echo3'
-//                }
-//            ]
-//        },
-//        {
-//            name: 'test5',
-//            echo: 'echo4'
-//        }
-//    ]
-//}
-//generateBlob(tree)

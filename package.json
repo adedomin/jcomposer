@@ -1,6 +1,6 @@
 {
   "name": "jscomposer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "basic tool to create programs via structured documents and function calls.",
   "main": "index.js",
   "scripts": {
@@ -9,8 +9,7 @@
   "author": "Anthony DeDominic <anthony@dedominic.pw>",
   "license": "Apache-2.0",
   "dependencies": {
-    "browserify": "^13.1.1",
-    "js-yaml": "^3.7.0",
+    "async.waterfall": "^0.5.2",
     "lodash": "^4.16.6"
   }
 }
