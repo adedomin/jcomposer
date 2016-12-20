@@ -29,4 +29,4 @@ var tree = {
     ]
 }
 
-require('./index.js')(tree)
+console.log(require('./index.js')(tree))

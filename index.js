@@ -55,6 +55,5 @@ var compose = (tree) => `
 `
 
 module.exports = (tree) => {
-    var source = compose(tree)
-    console.log(source)
+    return compose(tree)
 }
