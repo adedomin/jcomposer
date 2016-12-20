@@ -1,6 +1,6 @@
 {
   "name": "jscomposer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "basic tool to create programs via structured documents and function calls.",
   "main": "index.js",
   "scripts": {
