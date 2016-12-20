@@ -19,8 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var util = require('util'),
-    _ = require('lodash')
+var util = require('util')
 
 var genModule = (name, module, obj) => `
     // --- BEGIN ${name} ---
@@ -61,7 +60,7 @@ var serial = (name, modules) => {
 
 var handleModule = (module) => {
     var name = module.name
-    var mod_name = _.keys(module)[1]
+    var mod_name = Object.keys(module)[1]
     if (mod_name == 'serial') {
         return serial(name, module[mod_name]) 
     }
