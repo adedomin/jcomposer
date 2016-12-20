@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Anthony DeDominic <anthony@dedominic.pw>",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "dependencies": {
     "async.waterfall": "^0.5.2",
     "lodash": "^4.16.6"
