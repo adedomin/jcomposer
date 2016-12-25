@@ -23,18 +23,12 @@ var util = require('util')
 
 var genModule = (name, module, obj) => `
     // --- BEGIN ${name} ---
+  (cb) => {
     require('${module}')(${util.inspect(obj, { depth: null })}, (err, obj) => {
-        if (err) {
-            obj.error = err
-        }
-
         responses['${name}'] = obj
-    })
-
-    if (responses['${name}'].error) {
-        console.log(responses)
-        throw responses['${name}'].error
-    }
+        cb(err)
+    }) 
+  }
     // ---- END ${name} ----
 `
 
@@ -69,9 +63,14 @@ var handleModule = (module) => {
 
 var compose = (tree) => `
     var waterfall = require('async.waterfall')
+    var parallel = require('async.parallel')
     var responses = {}
-    ${tree.tasks.map(task => `${handleModule(task)}`).join('')}
-    console.log(JSON.stringify(responses))
+    parallel([
+        ${tree.tasks.map(task => `${handleModule(task)}`).join(',')}
+    ], (err) => {
+        if (err) throw err
+        console.log(JSON.stringify(responses))
+    })
 `
 
 module.exports = (tree) => {
