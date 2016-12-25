@@ -33,23 +33,18 @@ var genModule = (name, module, obj) => `
 `
 
 var serial = (name, modules) => {
-    var first = '(next) => {'
     return `
+      (cb) => {
         // --- BEGIN ${name} ---
         waterfall([
             ${modules.map(module => {
-                var ret = `
-                    ${first} 
-                        ${handleModule(module)}
-                        next()
-                    }
-                `
-                if (first.indexOf(',' < 0)) first = ', (next) => {'
-                return ret
-            }).join('')}
-        ])
+                return `${handleModule(module)}`
+            }).join(',')}
+        ], (err) => {
+            cb(err)
+        })
         // ---- END ${name} ----
-    `
+    }`
 }
 
 var handleModule = (module) => {
