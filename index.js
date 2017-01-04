@@ -22,20 +22,36 @@
 var util = require('util')
 
 var genModule = (name, module, obj) => `
-    // --- BEGIN ${name} ---
+  // --- BEGIN ${name} ---
   (cb) => {
     require('${module}')(${util.inspect(obj, { depth: null })}, (err, obj) => {
         responses['${name}'] = obj
         cb(err)
     }) 
   }
-    // ---- END ${name} ----
+  // ---- END ${name} ----
 `
+
+var parallel = (name, modules) => {
+    return `
+      // --- BEGIN ${name} ---
+      (cb) => {
+        parallel([
+            ${modules.map(module => {
+                return `${handleModule(module)}`
+            }).join(',')}       
+        ], (err) => {
+            cb(err)
+        })
+      }
+      // ---- END ${name} ----
+    `
+}
 
 var serial = (name, modules) => {
     return `
+      // --- BEGIN ${name} ---
       (cb) => {
-        // --- BEGIN ${name} ---
         waterfall([
             ${modules.map(module => {
                 return `${handleModule(module)}`
@@ -43,8 +59,9 @@ var serial = (name, modules) => {
         ], (err) => {
             cb(err)
         })
-        // ---- END ${name} ----
-    }`
+      }
+      // ---- END ${name} ----
+    `
 }
 
 var handleModule = (module) => {
@@ -52,6 +69,9 @@ var handleModule = (module) => {
     var mod_name = Object.keys(module)[1]
     if (mod_name == 'serial') {
         return serial(name, module[mod_name]) 
+    }
+    else if (mod_name == 'parallel') {
+        return parallel(name, module[mod_name]) 
     }
     return genModule(name, mod_name, module[mod_name])
 }
@@ -63,8 +83,8 @@ var compose = (tree) => `
     parallel([
         ${tree.tasks.map(task => `${handleModule(task)}`).join(',')}
     ], (err) => {
-        if (err) throw err
         console.log(JSON.stringify(responses))
+        if (err) throw err
     })
 `
 

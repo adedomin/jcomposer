@@ -19,6 +19,32 @@ var tree = {
                 {
                     name: 'test4',
                     echo: 'echo3'
+                },
+                {
+                    name: 'parallel test',
+                    parallel: [
+                        {
+                            name: 'partest1',
+                            echo: 'fasfds'
+                        },
+                        {
+                            name: 'partest2',
+                            echo: 'fdsafsa'
+                        }
+                    ]
+                },
+                {
+                    name: 'parallel test2',
+                    parallel: [
+                        {
+                            name: 'partest3',
+                            echo: 'fasfds'
+                        },
+                        {
+                            name: 'partest4',
+                            echo: 'fdsafsa'
+                        }
+                    ]
                 }
             ]
         },
